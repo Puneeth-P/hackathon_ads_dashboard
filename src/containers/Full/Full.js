@@ -8,8 +8,9 @@ import Footer from '../../components/Footer/';
 
 import Dashboard from '../../views/Dashboard/'
 
-
 class Full extends Component {
+
+
   render() {
     return (
 
@@ -22,7 +23,7 @@ class Full extends Component {
             <div className="container-fluid">
               <BrowserRouter>
               <Switch>
-                <Route exact path="/dashboard" name="Dashboard" component={Dashboard}/>
+                <Route exact path="/campaign/ad-group/ads" name="Dashboard" component={Dashboard}/>
 
 
               </Switch>
@@ -39,3 +40,4 @@ class Full extends Component {
 }
 
 export default Full;
+

@@ -25,13 +25,13 @@ const BreadcrumbsItem = ({ ...rest, match }) => {
     return (
       match.isExact ?
       (
-        <BreadcrumbItem active>{routeName}</BreadcrumbItem>
+        <BreadcrumbItem >{routeName}</BreadcrumbItem>
       ) :
       (
-        <BreadcrumbItem>
-          <Link to={match.url || ''} onClick={this.forceUpdate}>
-            {routeName}
-          </Link>
+        <BreadcrumbItem> {routeName}
+          {/*<Link to={match.url || ''} onClick={this.forceUpdate}>*/}
+            {/*{routeName}*/}
+          {/*</Link>*/}
         </BreadcrumbItem>
       )
     );

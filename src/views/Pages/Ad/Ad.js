@@ -4,6 +4,7 @@ import {Progress } from 'reactstrap';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import Breadcrumb from '../../../components/Breadcrumb/';
 import Header from '../../../components/Header';
+import Google_Advert from '../../../components/AdUI/Google_Advert';
 import classnames from 'classnames';
 import Footer from '../../../components/Footer';
 import { withRouter } from 'react-router'
@@ -229,19 +230,18 @@ class Ad extends Component {
         super(props);
 
         this.toggle = this.toggle.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+
 
 
 
         this.state = {
             dropdownOpen: false,
             filterText: '',
-            products : [],
-            currentPage: 1,
-            adsPerPage: 10,
-            activeTab: '1'
+            ad : [],
+            activeTab: '1',
+            adId:""
         };
-        this.state.products = [
+        this.state.ad = [
             {
                 adId: "94045596868",
                 adGroup: "USA:ENG:$:PT:AMER:USA:CA:Yosemite_National_Park:180672:Yosemite_National_Park:180672:D:EC::",
@@ -249,72 +249,41 @@ class Ad extends Component {
                 cost: "23",
                 pos: "1.2",
                 score: "9",
-            },
-            {
-                adId: "23476239",
-                adGroup: "USA:ENG:$:PT:AMER:MEX:XX:Mexico:117:Mexico:117:D:NC::",
-                ctr: "10.67%",
-                cost: "54.1",
-                pos: "2.6",
-                score: "6",
+                url : "http://www.booking.com/city/us/new-york.html?aid=306395;label=new-york-Rq*9j4EWVsc*7ElQI*TfEwS110121587789:pl:ta:p1500:p2:ac:ap1t1:neg:fi:tiaud-146342138710:kwd-4525987093:lp9061995:li:dec:dm;ws=&gclid=CjwKEAjw387JBRDPtJePvOej8kASJADkV9TLfCYx2bkdWTgCgYtkjN53i15xWZmOOg0gr3KZc_ZVjRoChJnw_wcB",
+                landing_page : "www.booking.com/New-York-Ny/Hotels",
+                heading_1 : "500 Hotels in New York NY",
+                heading_2 : "Half-Price Hotels. Book now - booking.com",
+                description : "Book your Hotel in New York NY online. No reservation costs. Great rates. Read Real Guest Reviews · We speak your language · Get Instant Confirmation · Secure Booking Types: Hotels, Apartments, Villas, Hostels, Resorts, B&Bs",
+                query : "Hotel in New York"
+
+
+
             },
 
-            {
-                adId: "8346234992347",
-                adGroup: "USA:ENG:$:PT:AMER:USA:XX:X:X:X:X:F:NC:",
-                ctr: "0.02%",
-                cost: "78",
-                pos: "4.6",
-                score: "3",
-            },
-
-            {
-                adId: "87234503",
-                adGroup: "USA:ENG:$:PT:AMER:USA:CA:Beach_Cities:178304:Hotel_Del_Coronado:PE7496:E:NC:",
-                ctr: "3.4%",
-                cost: "13.4",
-                pos: "2.4",
-                score: "7",
-            },
-            {
-                adId: "2139481234",
-                adGroup: "USA:ENG:$:PT:AMER:USA:NV:Las_Vegas:178276:Tahiti_Village_Resort_&_Spa:PE1445791:M:NC:",
-                ctr: "0.01%",
-                cost: "63",
-                pos: "3.8",
-                score: "2",
-            }
 
         ]
     }
+
 
     toggle(tab) {
         if (this.state.activeTab !== tab) {
             this.setState({
                 activeTab: tab
+
             });
         }
     }
 
-    handleClick(event) {
-
-        this.refs[this.state.currentPage].parentElement.classList.toggle("active");
-
-
-        this.setState({
-            currentPage: Number(event.target.id)
-        });
-
-        event.target.parentElement.classList.toggle("active");
-
-    }
 
     redirectToAdPage(event) {
 
-        window.location.href = "/dashboard/ad?id=" + (event.target.innerText).trim();
+        window.location.href = "/campaign/ad-group/ads/ad?id=" + (event.target.innerText).trim();
     }
 
     render() {
+
+        const params = new URLSearchParams(this.props.location.search);
+         this.state.adId = params.get('id');
 
         return (
             <div className="app">
@@ -325,6 +294,8 @@ class Ad extends Component {
                         <Breadcrumb />
                         <div className="container-fluid">
             <div className="animated fadeIn">
+                <h6 style={{textAlign :"center"}}>METRICS FOR THE AD: {this.state.adId}</h6>
+                <br/>
               <div className="row">
                 <div className="col-sm-6 col-lg-3">
                   <div className="card card-inverse card-primary">
@@ -487,7 +458,7 @@ class Ad extends Component {
                         <span className="input-group-btn">
                           <button type="button" className="btn btn-primary"><i className="fa fa-hashtag"></i> Ad Id</button>
                         </span>
-                                        <input type="text" id="input1-group2" name="input1-group2" value="2384756238456" className="form-control" disabled style={{backgroundColor: "white"}}/>
+                                        <input type="text" id="input1-group2" name="input1-group2" value={this.state.adId} className="form-control" disabled style={{backgroundColor: "white"}}/>
                                     </div>
                                 </div>
                                 <div className="col-md-8">
@@ -554,9 +525,38 @@ class Ad extends Component {
                 </div>
             </div>
 
-              <div className="row">
 
-              </div>
+                <div className="row" style={{marginTop : 5}}>
+                    <div className="col-sm-6">
+                        <div className="card">
+                            <div className="card-header" style={{textAlign : "centre"}}>CURRENT AD</div>
+                            <div className="card-block"> <Google_Advert data={this.state.ad}/></div>
+                        </div>
+                    </div>
+
+                    <div className="col-sm-6">
+                        <div className="card">
+                            <div className="card-header">NEW AD SUGGESTION</div>
+                            <div className="card-block"> <Google_Advert data={this.state.ad}/></div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+              {/*<div className="row">*/}
+                  {/*<div className="col-md-6">*/}
+                  {/*<div className="card">*/}
+                      {/*<Google_Advert data={this.state.ad}/>*/}
+                  {/*</div>*/}
+                      {/*<div className="col-md-12" style={{float:"right"}}>*/}
+
+                              {/*<Google_Advert data={this.state.ad}/>*/}
+
+                      {/*</div>*/}
+              {/*</div>*/}
+              {/*</div>*/}
 
             </div>
                         </div>

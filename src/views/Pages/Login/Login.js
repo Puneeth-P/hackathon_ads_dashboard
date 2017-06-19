@@ -38,7 +38,7 @@ class Login extends Component {
     }
 
     static redirectToDashboard () {
-        window.location.href = '/dashboard';
+        window.location.href = '/campaign?account=G:USA:ENG:$:PT:X';
     }
 
   render() {
@@ -69,7 +69,14 @@ class Login extends Component {
                         <div className="card p-4">
                           <div className="card-block">
                             <h1>Login</h1>
-                            <p className="text-muted">Select the date to view the Dashboard</p>
+                            <p className="text-muted">Select the Account and Date to view the Dashboard</p>
+
+                              <div class="form-group col-sm-4"><label>Account &nbsp;</label>
+                                  <select class="form-control" id="ccyear">
+                                      <option>G:USA:ENG:$:PT:X:</option>
+                                      <option>G:UK:ENG:$:PT:X:</option>
+                                  </select></div>
+
                             Need most recent Ads Analysis? &nbsp;
                             <label className="switch switch-3d switch-primary">
                               <input type="checkbox" className="switch-input" defaultChecked onChange={this.handleCheckBoxChange}/>

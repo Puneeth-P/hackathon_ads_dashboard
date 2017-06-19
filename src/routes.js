@@ -1,6 +1,6 @@
 const routes = {
   '/': 'Home',
-  '/dashboard': 'Dashboard',
+  '/campaign/ad-group/ads': 'Ads',
 
   '/components': 'Components',
   '/charts': 'Charts',
@@ -16,6 +16,8 @@ const routes = {
   '/icons/font-awesome': 'Font Awesome',
   '/icons/simple-line-icons': 'Simple Line Icons',
   '/widgets': 'Widgets',
-    '/dashboard/ad' : 'Ad'
+    '/campaign/ad-group/ads/ad' : 'Ad',
+    '/campaign' : 'Campaign',
+    '/campaign/ad-group' : 'Ad group'
 };
 export default routes;

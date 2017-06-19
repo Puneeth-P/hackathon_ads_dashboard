@@ -232,12 +232,12 @@ class Dashboard extends Component {
         filterText: '',
         products : [],
         currentPage: 1,
-        adsPerPage: 10
+        adsPerPage: 10,
+        adGroupName: ""
     };
       this.state.products = [
           {
               adId: "94045596868",
-              adGroup: "USA:ENG:$:PT:AMER:USA:CA:Yosemite_National_Park:180672:Yosemite_National_Park:180672:D:EC::",
               ctr: "23.45%",
               cost: "23",
               pos: "1.2",
@@ -245,7 +245,6 @@ class Dashboard extends Component {
           },
           {
               adId: "23476239",
-              adGroup: "USA:ENG:$:PT:AMER:MEX:XX:Mexico:117:Mexico:117:D:NC::",
               ctr: "10.67%",
               cost: "54.1",
               pos: "2.6",
@@ -254,7 +253,6 @@ class Dashboard extends Component {
 
           {
               adId: "8346234992347",
-              adGroup: "USA:ENG:$:PT:AMER:USA:XX:X:X:X:X:F:NC:",
               ctr: "0.02%",
               cost: "78",
               pos: "4.6",
@@ -263,7 +261,6 @@ class Dashboard extends Component {
 
           {
               adId: "87234503",
-              adGroup: "USA:ENG:$:PT:AMER:USA:CA:Beach_Cities:178304:Hotel_Del_Coronado:PE7496:E:NC:",
               ctr: "3.4%",
               cost: "13.4",
               pos: "2.4",
@@ -271,7 +268,6 @@ class Dashboard extends Component {
           },
           {
               adId: "2139481234",
-              adGroup: "USA:ENG:$:PT:AMER:USA:NV:Las_Vegas:178276:Tahiti_Village_Resort_&_Spa:PE1445791:M:NC:",
               ctr: "0.01%",
               cost: "63",
               pos: "3.8",
@@ -308,6 +304,8 @@ class Dashboard extends Component {
 
     }
 
+
+
   render() {
 
     const ads = this.state.products;
@@ -339,15 +337,20 @@ class Dashboard extends Component {
           );
       });
 
+      const params = new URLSearchParams(this.props.location.search);
+      this.state.adGroupName = params.get('adGroup');
+
       return (
       <div className="animated fadeIn">
+          <h6 style={{textAlign :"center"}}>METRICS FOR THE AD GROUP -> {this.state.adGroupName}</h6>
+          <br/>
         <div className="row">
           <div className="col-sm-6 col-lg-3">
             <div className="card card-inverse card-primary">
               <div className="card-block pb-0">
 
                 <h4 className="mb-0">3,524,224</h4>
-                <p>Total Impressions of all ads yesterday</p>
+                <p>Impressions of this Ad group yesterday</p>
               </div>
               <div className="chart-wrapper px-3">
                 <Line data={cardChartData1} options={cardChartOpts1} height={130}/>
@@ -359,7 +362,7 @@ class Dashboard extends Component {
             <div className="card card-inverse card-info">
               <div className="card-block pb-0">
                 <h4 className="mb-0">203,476</h4>
-                <p>Total Clicks on all ads yesterday</p>
+                <p>Total clicks of this Ad Group yesterday</p>
               </div>
               <div className="chart-wrapper px-3">
                 <Line data={cardChartData2} options={cardChartOpts2} height={130}/>
@@ -371,7 +374,7 @@ class Dashboard extends Component {
             <div className="card card-inverse card-warning">
               <div className="card-block pb-0">
                 <h4 className="mb-0">5.77%</h4>
-                <p>Average CTR of all ads yesterday</p>
+                <p>Average Position of this Ad Group</p>
               </div>
               <div className="chart-wrapper">
                 <Line data={cardChartData3} options={cardChartOpts3} height={130}/>
@@ -383,7 +386,7 @@ class Dashboard extends Component {
             <div className="card card-inverse card-danger">
               <div className="card-block pb-0">
                 <h4 className="mb-0">$469,534.88</h4>
-                <p>Total cost of all ads yesterday</p>
+                <p>Total cost of this Ad Group yesterday</p>
               </div>
               <div className="chart-wrapper px-3">
                 <Bar data={cardChartData4} options={cardChartOpts4} height={130}/>
@@ -392,33 +395,7 @@ class Dashboard extends Component {
           </div>
         </div>
 
-        <div className="card">
 
-          <div className="card-footer">
-            <ul>
-              <li>
-                <div className="text-muted">Total Google Search Queries triggered yesterday</div>
-                <strong>382,699</strong>
-              </li>
-              <li className="hidden-sm-down">
-                <div className="text-muted">Total Unique Keywords triggered yesterday</div>
-                <strong>127,566</strong>
-              </li>
-              <li>
-                <div className="text-muted">Average Position of all ads yesterday</div>
-                <strong>2.4</strong>
-              </li>
-              <li className="hidden-sm-down">
-                <div className="text-muted">Average Cost per Click (CPC) yesterday</div>
-                <strong>$2.31</strong>
-              </li>
-              <li className="hidden-sm-down">
-                <div className="text-muted">Average Cost per Thousand Impressions (CPM) yesterday</div>
-                <strong>$133.23</strong>
-              </li>
-            </ul>
-          </div>
-        </div>
 
 
 
@@ -427,11 +404,13 @@ class Dashboard extends Component {
             <div className="card">
 
               <div className="card-block">
-                <h6 style={{textAlign: 'center'}}>ADS TRIGGERED YESTERDAY</h6>
+                  <h6 style={{textAlign: 'center', fontWeight: 'normal'}}>ALL ADS FOR THE AD GROUP <strong><i>{this.state.adGroupName} </i></strong>THAT TRIGGERED YESTERDAY</h6>
 
 
-                <div className="form-group row">
+
+                  <div className="form-group row">
                   <div className="col-md-3">
+                      <br/>
                     <SearchBar filterText={this.state.filterText} onUserInput={this.handleUserInput.bind(this)}/></div>
                 </div>
                 <ProductTable products={currentAds} filterText={this.state.filterText}/>
@@ -571,11 +550,10 @@ class ProductTable extends Component {
                 <thead className="thead-default">
                 <tr>
                   <th className="text-center" onClick={this.sortColumn.bind(this, 0)}>Ad ID</th>
-                  <th className="text-center" onClick={this.sortColumn.bind(this, 1)} >Ad Group</th>
-                  <th className="text-center" onClick={this.sortColumn.bind(this, 2)}>CTR</th>
-                  <th className="text-center" onClick={this.sortColumn.bind(this, 3)}>Cost ($)</th>
-                  <th className="text-center" onClick={this.sortColumn.bind(this, 4)}>Avg Position</th>
-                  <th className="text-center" ref="score" onClick={this.sortColumn.bind(this, 5)}>Overall Score</th>
+                    <th className="text-center" onClick={this.sortColumn.bind(this, 1)}>CTR</th>
+                  <th className="text-center" onClick={this.sortColumn.bind(this, 2)}>Cost ($)</th>
+                  <th className="text-center" onClick={this.sortColumn.bind(this, 3)}>Avg Position</th>
+                  <th className="text-center" ref="score" onClick={this.sortColumn.bind(this, 4)}>Overall Score</th>
 
                 </tr>
                 </thead>
@@ -595,9 +573,16 @@ class ProductTable extends Component {
 
 class ProductRow extends Component {
 
+    constructor(props) {
+        super(props)
+    }
+
+
     redirectToAdPage(adId, event) {
 
-        window.location.href = "/dashboard/ad?id=" +adId;
+
+
+        window.location.href = "/campaign/ad-group/ads/ad?id=" +adId;
     }
 
     render() {
@@ -609,12 +594,7 @@ class ProductRow extends Component {
                   value: this.props.product.adId,
                   id: this.props.product.adId
               }}/>
-              <Cell cellData={{
-                  type: "adGroup",
-                  value: this.props.product.adGroup,
-                  id: this.props.product.adId
-              }}/>
-              <Cell  cellData={{
+                <Cell  cellData={{
                   type: "ctr",
                   value: this.props.product.ctr,
                   id: this.props.product.adId
