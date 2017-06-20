@@ -1,226 +1,12 @@
 import React, { Component } from 'react';
-import { Bar, Line } from 'react-chartjs-2';
 import {Progress } from 'reactstrap';
-import { withRouter } from 'react-router'
 import Breadcrumb from '../../../components/Breadcrumb/';
 import Header from '../../../components/Header';
+import axios from 'axios';
 
+let date;
 
-const brandPrimary =  '#20a8d8';
-const brandSuccess =  '#4dbd74';
-const brandInfo =     '#63c2de';
-const brandDanger =   '#f86c6b';
-
-// Card Chart 1
-const cardChartData1 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'Impressions ',
-            backgroundColor: brandPrimary,
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [65, 59, 84, 84, 51, 55, 40]
-        }
-    ],
-};
-
-const cardChartOpts1 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            gridLines: {
-                color: 'transparent',
-                zeroLineColor: 'transparent'
-            },
-            ticks: {
-                fontSize: 2,
-                fontColor: 'transparent',
-            }
-
-        }],
-        yAxes: [{
-            display: false,
-            ticks: {
-                display: false,
-                min: Math.min.apply(Math, cardChartData1.datasets[0].data) - 5,
-                max: Math.max.apply(Math, cardChartData1.datasets[0].data) + 5,
-            }
-        }],
-    },
-    elements: {
-        line: {
-            borderWidth: 1
-        },
-        point: {
-            radius: 4,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 2
-const cardChartData2 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: brandInfo,
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [1, 18, 9, 17, 34, 22, 11]
-        }
-    ],
-};
-
-const cardChartOpts2 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            gridLines: {
-                color: 'transparent',
-                zeroLineColor: 'transparent'
-            },
-            ticks: {
-                fontSize: 2,
-                fontColor: 'transparent',
-            }
-
-        }],
-        yAxes: [{
-            display: false,
-            ticks: {
-                display: false,
-                min: Math.min.apply(Math, cardChartData2.datasets[0].data) - 5,
-                max: Math.max.apply(Math, cardChartData2.datasets[0].data) + 5,
-            }
-        }],
-    },
-    elements: {
-        line: {
-            tension: 0.00001,
-            borderWidth: 1
-        },
-        point: {
-            radius: 4,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 3
-const cardChartData3 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(255,255,255,.2)',
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [78, 81, 80, 45, 34, 12, 40]
-        }
-    ],
-};
-
-const cardChartOpts3 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            display: false
-        }],
-        yAxes: [{
-            display: false
-        }],
-    },
-    elements: {
-        line: {
-            borderWidth: 2
-        },
-        point: {
-            radius: 0,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 4
-const cardChartData4 = {
-    labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(255,255,255,.3)',
-            borderColor: 'transparent',
-            data: [78, 81, 80, 45, 34, 12, 40, 75, 34, 89, 32, 68, 54, 72, 18, 98]
-        }
-    ],
-};
-
-const cardChartOpts4 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            display: false,
-            barPercentage: 0.6,
-        }],
-        yAxes: [{
-            display: false,
-        }]
-    }
-};
-
-const rows = [
-    ['a1', 'b1', 'c1'],
-    ['a2', 'b2', 'c2'],
-    ['a3', 'b3', 'c3'],
-    // .... and more
-];
-
-
-// Main Chart
-
-// convert Hex to RGBA
-function convertHex(hex,opacity) {
-    hex = hex.replace('#','');
-    var r = parseInt(hex.substring(0,2), 16);
-    var g = parseInt(hex.substring(2,4), 16);
-    var b = parseInt(hex.substring(4,6), 16);
-
-    var result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
-    return result;
-}
-
-//Random Numbers
-function random(min,max) {
-    return Math.floor(Math.random()*(max-min+1)+min);
-}
-
-var elements = 27;
-var data1 = [];
-var data2 = [];
-var data3 = [];
-
-for (var i = 0; i <= elements; i++) {
-    data1.push(random(50,200));
-    data2.push(random(80,100));
-    data3.push(65);
-}
-
-
-
-class Campaign extends Component {
+class AdGroup extends Component {
 
     constructor(props) {
         super(props);
@@ -236,60 +22,79 @@ class Campaign extends Component {
             currentPage: 1,
             adsPerPage: 10,
             campaign : ""
+
         };
-        this.state.products = [
-            {
-                id: "1",
-                adGroup: "USA:ENG:$:PT:AMER:USA:CA:Yosemite_National_Park:180672:Yosemite_National_Park:180672:D:EC::",
-                impressions: "757",
-                clicks: "87",
-                cost: "23",
-                pos: "1.2",
-                score: "9",
-            },
-            {
-                id: "2",
-                adGroup: "USA:ENG:$:PT:AMER:MEX:XX:Mexico:117:Mexico:117:D:NC::",
-                impressions: "757",
-                clicks: "12",
-                cost: "54.1",
-                pos: "2.6",
-                score: "6",
-            },
-
-            {
-                id: "3",
-                adGroup: "USA:ENG:$:PT:AMER:USA:XX:X:X:X:X:F:NC:",
-                impressions: "237",
-                clicks: "97",
-                cost: "78",
-                pos: "4.6",
-                score: "3",
-            },
-
-            {
-                id: "4",
-                adGroup: "USA:ENG:$:PT:AMER:USA:CA:Beach_Cities:178304:Hotel_Del_Coronado:PE7496:E:NC:",
-                impressions: "87",
-                clicks: "123",
-                cost: "13.4",
-                pos: "2.4",
-                score: "7",
-            },
-            {
-                id: "5",
-                adGroup: "USA:ENG:$:PT:AMER:USA:NV:Las_Vegas:178276:Tahiti_Village_Resort_&_Spa:PE1445791:M:NC:",
-                impressions: "123",
-                clicks: "13",
-                cost: "63",
-                pos: "3.8",
-                score: "2",
-            }
-
-        ]
+        // this.state.products = [
+        //     {
+        //         id: "1",
+        //         adGroup: "USA:ENG:$:PT:AMER:USA:CA:Yosemite_National_Park:180672:Yosemite_National_Park:180672:D:EC::",
+        //         impressions: "757",
+        //         clicks: "87",
+        //         cost: "23",
+        //         pos: "1.2",
+        //         score: "9",
+        //     },
+        //     {
+        //         id: "2",
+        //         adGroup: "USA:ENG:$:PT:AMER:MEX:XX:Mexico:117:Mexico:117:D:NC::",
+        //         impressions: "757",
+        //         clicks: "12",
+        //         cost: "54.1",
+        //         pos: "2.6",
+        //         score: "6",
+        //     },
+        //
+        //     {
+        //         id: "3",
+        //         adGroup: "USA:ENG:$:PT:AMER:USA:XX:X:X:X:X:F:NC:",
+        //         impressions: "237",
+        //         clicks: "97",
+        //         cost: "78",
+        //         pos: "4.6",
+        //         score: "3",
+        //     },
+        //
+        //     {
+        //         id: "4",
+        //         adGroup: "USA:ENG:$:PT:AMER:USA:CA:Beach_Cities:178304:Hotel_Del_Coronado:PE7496:E:NC:",
+        //         impressions: "87",
+        //         clicks: "123",
+        //         cost: "13.4",
+        //         pos: "2.4",
+        //         score: "7",
+        //     },
+        //     {
+        //         id: "5",
+        //         adGroup: "USA:ENG:$:PT:AMER:USA:NV:Las_Vegas:178276:Tahiti_Village_Resort_&_Spa:PE1445791:M:NC:",
+        //         impressions: "123",
+        //         clicks: "13",
+        //         cost: "63",
+        //         pos: "3.8",
+        //         score: "2",
+        //     }
+        //
+        // ]
     }
 
+    componentDidMount() {
+        let _this = this;
+        this.serverRequest =
+            axios
+                .get("http://127.0.0.1:3004/get")
+                .then(function(result) {
+                    console.log(result);
+                    _this.setState({
+                        products: result.data.adGroupInfo,
+                        campaign: result.data.campaign
 
+                    });
+                })
+
+    }
+
+    componentWillUnmount() {
+        this.serverRequest.abort();
+    }
 
     handleUserInput(filterText) {
         this.setState({filterText: filterText});
@@ -349,7 +154,7 @@ class Campaign extends Component {
         });
 
         const params = new URLSearchParams(this.props.location.search);
-        this.state.campaign = params.get('campaign');
+        date = params.get('date');
 
         return (
             <div className="app">
@@ -366,7 +171,7 @@ class Campaign extends Component {
                                         <div className="card">
 
                                             <div className="card-block">
-                                                <h6 style={{textAlign: 'center', fontWeight: 'normal'}}>ALL AD GROUPS FOR THE CAMPAIGN <strong><i>{this.state.campaign} </i></strong>THAT TRIGGERED YESTERDAY</h6>
+                                                <h6 style={{textAlign: 'center', fontWeight: 'normal'}}>ALL AD GROUPS FOR THE CAMPAIGN <strong>{this.state.campaign} </strong>THAT TRIGGERED ON <strong>{date}</strong> </h6>
 
                                                 <div className="form-group row">
                                                     <div className="col-md-3">
@@ -433,13 +238,13 @@ class ProductTable extends Component {
 
                 if(n === 5){
                     if (dir === "asc") {
-                        if(parseInt(x.children[0].children[0].innerText)  > parseInt(y.children[0].children[0].innerText)) {
+                        if(parseInt(x.children[0].children[0].innerText, 10)  > parseInt(y.children[0].children[0].innerText, 10)) {
                             shouldSwitch= true;
                             break;
                         }
                     }
                     else if(dir === "desc") {
-                        if (parseInt(x.children[0].children[0].innerText) <  parseInt(y.children[0].children[0].innerText)) {
+                        if (parseInt(x.children[0].children[0].innerText, 10) <  parseInt(y.children[0].children[0].innerText, 10)) {
                             //if so, mark as a switch and break the loop:
                             shouldSwitch= true;
                             break;
@@ -447,15 +252,15 @@ class ProductTable extends Component {
                     }
                 }
                 else {
-                    if(n != 1) {
+                    if(n !== 1) {
                         if (dir === "asc") {
-                            if (parseInt(x.children[0].innerText) > parseInt(y.children[0].innerText)) {
+                            if (parseInt(x.children[0].innerText, 10) > parseInt(y.children[0].innerText, 10)) {
                                 shouldSwitch = true;
                                 break;
                             }
                         }
                         else if (dir === "desc") {
-                            if (parseInt(x.children[0].innerText) < parseInt(y.children[0].innerText)) {
+                            if (parseInt(x.children[0].innerText, 10) < parseInt(y.children[0].innerText, 10)) {
                                 //if so, mark as a switch and break the loop:
                                 shouldSwitch = true;
                                 break;
@@ -512,13 +317,13 @@ class ProductTable extends Component {
                 <table className="table table-hover table-outline mb-0 table-bordered">
                     <thead className="thead-default">
                     <tr>
-                        <th className="text-center" onClick={this.sortColumn.bind(this, 0)}>Sl No</th>
-                        <th className="text-center" onClick={this.sortColumn.bind(this, 1)} >Ad Group</th>
-                        <th className="text-center" onClick={this.sortColumn.bind(this, 2)} >Impressions</th>
-                        <th className="text-center" onClick={this.sortColumn.bind(this, 3)}>Clicks</th>
-                        <th className="text-center" onClick={this.sortColumn.bind(this, 4)}>Cost ($)</th>
-                        <th className="text-center" onClick={this.sortColumn.bind(this, 5)}>Avg Position</th>
-                        <th className="text-center" ref="score" onClick={this.sortColumn.bind(this, 6)}>Overall Score</th>
+
+                        <th className="text-center" onClick={this.sortColumn.bind(this, 0)} >Ad Group</th>
+                        <th className="text-center" onClick={this.sortColumn.bind(this, 1)} >Impressions</th>
+                        <th className="text-center" onClick={this.sortColumn.bind(this, 2)}>Clicks</th>
+                        <th className="text-center" onClick={this.sortColumn.bind(this, 3)}>Cost ($)</th>
+                        <th className="text-center" onClick={this.sortColumn.bind(this, 4)}>Avg Position</th>
+                        <th className="text-center" ref="score" onClick={this.sortColumn.bind(this, 5)}>Overall Score</th>
 
                     </tr>
                     </thead>
@@ -538,16 +343,14 @@ class ProductTable extends Component {
 
 class ProductRow extends Component {
 
-    constructor(props) {
-        super(props)
-    }
+
 
 
     redirectToAdPage(adGroup, event) {
 
 
 
-        window.location.href = "/campaign/ad-group/ads?adGroup=" +adGroup;
+        window.location.href = "/campaign/ad-group/ads?adGroup=" +adGroup+"&date="+date;
     }
 
     render() {
@@ -555,39 +358,34 @@ class ProductRow extends Component {
         return (
             <tr onClick={this.redirectToAdPage.bind(this, this.props.product.adGroup)}>
                 <Cell cellData={{
-                    "type": "adId",
-                    value: this.props.product.id,
-                    id: this.props.product.id
-                }}/>
-                <Cell cellData={{
                     type: "adGroup",
                     value: this.props.product.adGroup,
-                    id: this.props.product.id
+                    id: this.props.product.adGroup
                 }}/>
                 <Cell cellData={{
                     type: "impressions",
-                    value: this.props.product.impressions,
-                    id: this.props.product.id
+                    value: this.props.product.totalImpressions,
+                    id: this.props.product.adGroup
                 }}/>
                 <Cell  cellData={{
                     type: "clicks",
-                    value: this.props.product.clicks,
-                    id: this.props.product.id
+                    value: this.props.product.totalClicks,
+                    id: this.props.product.adGroup
                 }}/>
                 <Cell cellData={{
                     type: "cost",
-                    value: this.props.product.cost,
-                    id: this.props.product.id
+                    value: this.props.product.totalCost,
+                    id: this.props.product.adGroup
                 }}/>
                 <Cell cellData={{
                     type: "pos",
-                    value: this.props.product.pos,
-                    id: this.props.product.id
+                    value: this.props.product.totaAvgPos,
+                    id: this.props.product.adGroup
                 }}/>
                 <Cell cellData={{
                     type: "score",
-                    value: this.props.product.score,
-                    id: this.props.product.id
+                    value: this.props.product.agScore,
+                    id: this.props.product.adGroup
                 }}/>
             </tr>
         );
@@ -606,7 +404,7 @@ class Cell extends Component {
         let div;
 
         if(type === "score") {
-            let score = parseInt(this.props.cellData.value);
+            let score = parseInt(this.props.cellData.value, 10);
 
             if(score >= 8 && score <= 10){
                 progressBar = <Progress className="progress-xs" color="success" value={score * 10} />;
@@ -634,4 +432,4 @@ class Cell extends Component {
 
 }
 
-export default Campaign;
+export default AdGroup;

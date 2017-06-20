@@ -20,6 +20,7 @@
     "react-addons-css-transition-group": "15.5.2",
     "react-addons-transition-group": "15.5.2",
     "react-chartjs-2": "2.1.0",
+    "react-contenteditable": "^2.0.2",
     "react-datepicker": "^0.47.0",
     "react-dom": "15.5.4",
     "react-router": "^4.1.1",

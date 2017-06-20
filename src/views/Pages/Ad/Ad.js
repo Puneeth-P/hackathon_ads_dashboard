@@ -5,9 +5,12 @@ import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import Breadcrumb from '../../../components/Breadcrumb/';
 import Header from '../../../components/Header';
 import Google_Advert from '../../../components/AdUI/Google_Advert';
+import Google_Advert2 from '../../../components/Google_Advert/Google_Advert2';
 import classnames from 'classnames';
 import Footer from '../../../components/Footer';
 import { withRouter } from 'react-router'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import axios from 'axios';
 
 
 const brandPrimary =  '#20a8d8';
@@ -15,175 +18,6 @@ const brandSuccess =  '#4dbd74';
 const brandInfo =     '#63c2de';
 const brandDanger =   '#f86c6b';
 
-// Card Chart 1
-const cardChartData1 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'Impressions ',
-            backgroundColor: brandPrimary,
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [65, 59, 84, 84, 51, 55, 40]
-        }
-    ],
-};
-
-const cardChartOpts1 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            gridLines: {
-                color: 'transparent',
-                zeroLineColor: 'transparent'
-            },
-            ticks: {
-                fontSize: 2,
-                fontColor: 'transparent',
-            }
-
-        }],
-        yAxes: [{
-            display: false,
-            ticks: {
-                display: false,
-                min: Math.min.apply(Math, cardChartData1.datasets[0].data) - 5,
-                max: Math.max.apply(Math, cardChartData1.datasets[0].data) + 5,
-            }
-        }],
-    },
-    elements: {
-        line: {
-            borderWidth: 1
-        },
-        point: {
-            radius: 4,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 2
-const cardChartData2 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: brandInfo,
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [1, 18, 9, 17, 34, 22, 11]
-        }
-    ],
-};
-
-const cardChartOpts2 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            gridLines: {
-                color: 'transparent',
-                zeroLineColor: 'transparent'
-            },
-            ticks: {
-                fontSize: 2,
-                fontColor: 'transparent',
-            }
-
-        }],
-        yAxes: [{
-            display: false,
-            ticks: {
-                display: false,
-                min: Math.min.apply(Math, cardChartData2.datasets[0].data) - 5,
-                max: Math.max.apply(Math, cardChartData2.datasets[0].data) + 5,
-            }
-        }],
-    },
-    elements: {
-        line: {
-            tension: 0.00001,
-            borderWidth: 1
-        },
-        point: {
-            radius: 4,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 3
-const cardChartData3 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(255,255,255,.2)',
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [78, 81, 80, 45, 34, 12, 40]
-        }
-    ],
-};
-
-const cardChartOpts3 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            display: false
-        }],
-        yAxes: [{
-            display: false
-        }],
-    },
-    elements: {
-        line: {
-            borderWidth: 2
-        },
-        point: {
-            radius: 0,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 4
-const cardChartData4 = {
-    labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(255,255,255,.3)',
-            borderColor: 'transparent',
-            data: [78, 81, 80, 45, 34, 12, 40, 75, 34, 89, 32, 68, 54, 72, 18, 98]
-        }
-    ],
-};
-
-const cardChartOpts4 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            display: false,
-            barPercentage: 0.6,
-        }],
-        yAxes: [{
-            display: false,
-        }]
-    }
-};
 
 const rows = [
     ['a1', 'b1', 'c1'],
@@ -223,6 +57,7 @@ for (var i = 0; i <= elements; i++) {
 }
 
 
+let date;
 
 class Ad extends Component {
 
@@ -234,34 +69,110 @@ class Ad extends Component {
 
 
 
+
         this.state = {
             dropdownOpen: false,
             filterText: '',
-            ad : [],
+            ad : {},
             activeTab: '1',
-            adId:""
+            adId:"",
+            primary:"",
+            account: "G:USA:ENG:$:PT:X:",
+            allSearchQueries: [],
+            keywords: [],
+            otherAds:[],
+            impressions: [],
+            clicks: [],
+            ctr: [],
+            cost: [],
+            currentAd: {},
+            newAd: {}
+
+
         };
-        this.state.ad = [
-            {
-                adId: "94045596868",
-                adGroup: "USA:ENG:$:PT:AMER:USA:CA:Yosemite_National_Park:180672:Yosemite_National_Park:180672:D:EC::",
-                ctr: "23.45%",
-                cost: "23",
-                pos: "1.2",
-                score: "9",
-                url : "http://www.booking.com/city/us/new-york.html?aid=306395;label=new-york-Rq*9j4EWVsc*7ElQI*TfEwS110121587789:pl:ta:p1500:p2:ac:ap1t1:neg:fi:tiaud-146342138710:kwd-4525987093:lp9061995:li:dec:dm;ws=&gclid=CjwKEAjw387JBRDPtJePvOej8kASJADkV9TLfCYx2bkdWTgCgYtkjN53i15xWZmOOg0gr3KZc_ZVjRoChJnw_wcB",
-                landing_page : "www.booking.com/New-York-Ny/Hotels",
-                heading_1 : "500 Hotels in New York NY",
-                heading_2 : "Half-Price Hotels. Book now - booking.com",
-                description : "Book your Hotel in New York NY online. No reservation costs. Great rates. Read Real Guest Reviews · We speak your language · Get Instant Confirmation · Secure Booking Types: Hotels, Apartments, Villas, Hostels, Resorts, B&Bs",
-                query : "Hotel in New York"
+        // this.state.ad =  {
+        //     adId: "94045596868",
+        //     adGroup: "USA:ENG:$:PT:AMER:USA:CA:Yosemite_National_Park:180672:Yosemite_National_Park:180672:D:EC::",
+        //     clicks: "8",
+        //     impressions: "16",
+        //     ctr: "23.45%",
+        //     cost: "23",
+        //     cpc: "23",
+        //     cpm: "25",
+        //     campaign:"USA:ENG:$:PT:AMER:USA:E:NC::",
+        //     totalSearchQueries: "123",
+        //     searchScore : "5",
+        //     adScore: "7",
+        //     lpScore: "6",
+        //     overallScore : "7",
+        //     pos: "1.2",
+        //     score: "9",
+        //     allSearchQueries: ["bayfront inn santa cruz", "lux tea horse road benzilan", "tahiti village hotel las vegas"],
+        //     keywords: ["+hotel +10 +montreal","[bayfront inn santa cruz]"," +seagate +hotel", "[ofelias hotel barcelona]"],
+        //     otherAds: ["1234213421341234","213421343241234", "43564564536"],
+        //     currentAd: {
+        //         url : "http://www.booking.com/city/us/new-york.html?aid=306395;label=new-york-Rq*9j4EWVsc*7ElQI*TfEwS110121587789:pl:ta:p1500:p2:ac:ap1t1:neg:fi:tiaud-146342138710:kwd-4525987093:lp9061995:li:dec:dm;ws=&gclid=CjwKEAjw387JBRDPtJePvOej8kASJADkV9TLfCYx2bkdWTgCgYtkjN53i15xWZmOOg0gr3KZc_ZVjRoChJnw_wcB",
+        //         landing_page : "www.booking.com/New-York-Ny/Hotels",
+        //         heading_1 : "Booking.com: 500 Hotels in New York NY",
+        //         heading_2 : "Half-Price Hotels. Book now - booking.com",
+        //         description : "Book your Hotel in New York NY online. No reservation costs. Great rates. Read Real Guest Reviews · We speak your language · Get Instant Confirmation · Secure Booking Types: Hotels, Apartments, Villas, Hostels, Resorts, B&Bs",
+        //
+        //
+        //     },
+        //     newAD: {
+        //         url : "http://www.booking.com/city/us/new-york.html?aid=306395;label=new-york-Rq*9j4EWVsc*7ElQI*TfEwS110121587789:pl:ta:p1500:p2:ac:ap1t1:neg:fi:tiaud-146342138710:kwd-4525987093:lp9061995:li:dec:dm;ws=&gclid=CjwKEAjw387JBRDPtJePvOej8kASJADkV9TLfCYx2bkdWTgCgYtkjN53i15xWZmOOg0gr3KZc_ZVjRoChJnw_wcB",
+        //         landing_page : "www.booking.com/New-York-Ny/Hotels",
+        //         heading_1 : "Expedia : 500 Hotels in New York NY",
+        //
+        //         description : "Book your Hotel in New York NY online. No reservation costs. Great rates. Read Real Guest Reviews · We speak your language · Get Instant Confirmation · Secure Booking Types: Hotels, Apartments, Villas, Hostels, Resorts, B&Bs"
+        //
+        //
+        //     },
+        //
+        //     adPastDaysData : {
+        //         totalImpressions: [65,59,84,84,51],
+        //         totalClicks: [65,59,84,84,51],
+        //         totalCtr: [0.22,0.33,0.45,1.22,1.46],
+        //         totalCost: [25,29,14,15,13]
+        //
+        //     }
+        //
+        //
+        //
+        // }
+        //
+        //
+
+    }
+    componentDidMount() {
+        let _this = this;
+        this.serverRequest =
+            axios
+                .get("http://127.0.0.1:3007/get")
+                .then(function(result) {
+                    console.log(result);
+                    _this.setState({
+                        ad: result.data.ad,
+                        currentAd: result.data.ad.currentAd,
+                        newAd: result.data.ad.newAd,
+                        allAdsData: result.data.ad.adPastDaysData,
+                        impressions: result.data.ad.adPastDaysData.totalImpressions,
+                        clicks: result.data.ad.adPastDaysData.totalClicks,
+                        ctr: result.data.ad.adPastDaysData.totalCtr,
+                        cost: result.data.ad.adPastDaysData.totalCost,
+                        allSearchQueries: result.data.ad.allSearchQueries,
+                        keywords: result.data.ad.keywords,
+                        otherAds: result.data.ad.otherAds,
 
 
 
-            },
+                    });
+                })
 
+    }
 
-        ]
+    componentWillUnmount() {
+        this.serverRequest.abort();
     }
 
 
@@ -271,8 +182,14 @@ class Ad extends Component {
                 activeTab: tab
 
             });
+
         }
     }
+
+
+
+
+
 
 
     redirectToAdPage(event) {
@@ -282,8 +199,192 @@ class Ad extends Component {
 
     render() {
 
+        // Card Chart 1
+        const cardChartData1 = {
+            labels: ['Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13'],
+            datasets: [
+                {
+                    label: 'Impressions ',
+                    backgroundColor: brandPrimary,
+                    borderColor: 'rgba(255,255,255,.55)',
+                    data: this.state.impressions
+                }
+            ],
+        };
+
+        const cardChartOpts1 = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'transparent',
+                        zeroLineColor: 'transparent'
+                    },
+                    ticks: {
+                        fontSize: 2,
+                        fontColor: 'transparent',
+                    }
+
+                }],
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        display: false,
+                        min: Math.min.apply(Math, cardChartData1.datasets[0].data) - 5,
+                        max: Math.max.apply(Math, cardChartData1.datasets[0].data) + 5,
+                    }
+                }],
+            },
+            elements: {
+                line: {
+                    borderWidth: 1
+                },
+                point: {
+                    radius: 4,
+                    hitRadius: 10,
+                    hoverRadius: 4,
+                },
+            }
+        }
+
+// Card Chart 2
+        const cardChartData2 = {
+            labels: ['Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13'],
+            datasets: [
+                {
+                    label: 'Clicks',
+                    backgroundColor: brandInfo,
+                    borderColor: 'rgba(255,255,255,.55)',
+                    data: this.state.clicks
+                }
+            ],
+        };
+
+        const cardChartOpts2 = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'transparent',
+                        zeroLineColor: 'transparent'
+                    },
+                    ticks: {
+                        fontSize: 2,
+                        fontColor: 'transparent',
+                    }
+
+                }],
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        display: false,
+                        min: Math.min.apply(Math, cardChartData2.datasets[0].data) - 5,
+                        max: Math.max.apply(Math, cardChartData2.datasets[0].data) + 5,
+                    }
+                }],
+            },
+            elements: {
+                line: {
+                    tension: 0.00001,
+                    borderWidth: 1
+                },
+                point: {
+                    radius: 4,
+                    hitRadius: 10,
+                    hoverRadius: 4,
+                },
+            }
+        }
+
+// Card Chart 3
+        const cardChartData3 = {
+            labels:['Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13'],
+            datasets: [
+                {
+                    label: 'CTR',
+                    backgroundColor: 'rgba(255,255,255,.2)',
+                    borderColor: 'rgba(255,255,255,.55)',
+                    data: this.state.ctr
+                }
+            ],
+        };
+
+        const cardChartOpts3 = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    display: false
+                }],
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        display: false,
+
+                    }
+                }],
+            },
+            elements: {
+                line: {
+                    borderWidth: 2
+                },
+                point: {
+                    radius: 4,
+                    hitRadius: 10,
+                    hoverRadius: 4,
+                },
+            }
+        }
+
+// Card Chart 4
+        const cardChartData4 = {
+            labels: ['Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13'],
+            datasets: [
+                {
+                    label: 'Cost',
+                    backgroundColor: 'rgba(255,255,255,.3)',
+                    borderColor: 'transparent',
+                    data: this.state.cost
+                }
+            ],
+        };
+
+        const cardChartOpts4 = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    display: false,
+                    barPercentage: 0.6,
+                }],
+                yAxes: [{
+                    display: false,
+                }]
+            }
+        };
+
+
         const params = new URLSearchParams(this.props.location.search);
          this.state.adId = params.get('id');
+         date= params.get('date');
+
+
+
+
+
+
+
+
 
         return (
             <div className="app">
@@ -294,14 +395,14 @@ class Ad extends Component {
                         <Breadcrumb />
                         <div className="container-fluid">
             <div className="animated fadeIn">
-                <h6 style={{textAlign :"center"}}>METRICS FOR THE AD: {this.state.adId}</h6>
+                <h6 style={{textAlign :"center"}}>METRICS FOR THE AD: <strong>{this.state.adId}</strong> for <strong>{date}</strong></h6>
                 <br/>
               <div className="row">
                 <div className="col-sm-6 col-lg-3">
                   <div className="card card-inverse card-primary">
                     <div className="card-block pb-0">
 
-                      <h4 className="mb-0">113</h4>
+                      <h4 className="mb-0">{this.state.ad.impressions}</h4>
                       <p>Total Impressions of this ad</p>
                     </div>
                     <div className="chart-wrapper px-3">
@@ -313,8 +414,8 @@ class Ad extends Component {
                 <div className="col-sm-6 col-lg-3">
                   <div className="card card-inverse card-info">
                     <div className="card-block pb-0">
-                      <h4 className="mb-0">10</h4>
-                      <p>Total Clicks on this ad yesterday</p>
+                      <h4 className="mb-0">{this.state.ad.clicks}%</h4>
+                      <p>Total Clicks on this ad</p>
                     </div>
                     <div className="chart-wrapper px-3">
                       <Line data={cardChartData2} options={cardChartOpts2} height={130}/>
@@ -325,8 +426,8 @@ class Ad extends Component {
                 <div className="col-sm-6 col-lg-3">
                   <div className="card card-inverse card-warning">
                     <div className="card-block pb-0">
-                      <h4 className="mb-0">8.55%</h4>
-                      <p>CTR of this ad yesterday</p>
+                      <h4 className="mb-0">{this.state.ad.ctr}</h4>
+                      <p>CTR of this ad</p>
                     </div>
                     <div className="chart-wrapper">
                       <Line data={cardChartData3} options={cardChartOpts3} height={130}/>
@@ -337,8 +438,8 @@ class Ad extends Component {
                 <div className="col-sm-6 col-lg-3">
                   <div className="card card-inverse card-danger">
                     <div className="card-block pb-0">
-                      <h4 className="mb-0">$10.21</h4>
-                      <p>Cost of this ad yesterday</p>
+                      <h4 className="mb-0">${this.state.ad.cost}</h4>
+                      <p>Cost of this ad</p>
                     </div>
                     <div className="chart-wrapper px-3">
                       <Bar data={cardChartData4} options={cardChartOpts4} height={130}/>
@@ -354,19 +455,19 @@ class Ad extends Component {
                   <ul>
                     <li>
                       <div className="text-muted">Total Search Queries that triggered this ad</div>
-                      <strong>22</strong>
+                      <strong>{this.state.ad.totalSearchQueries}</strong>
                     </li>
                       <li>
                       <div className="text-muted">Average Position</div>
-                      <strong>2.2</strong>
+                      <strong>{this.state.ad.pos}</strong>
                     </li>
                     <li className="hidden-sm-down">
                       <div className="text-muted">Average Cost per Click (CPC)</div>
-                      <strong>$1.02</strong>
+                      <strong>${this.state.ad.cpc}</strong>
                     </li>
                     <li className="hidden-sm-down">
                       <div className="text-muted" style={{fontSize: 13}}>Average Cost per Thousand Impressions (CPM)</div>
-                      <strong>$90.35</strong>
+                      <strong>${this.state.ad.cpm}</strong>
                     </li>
                   </ul>
                 </div>
@@ -380,38 +481,38 @@ class Ad extends Component {
                             <div className="col-sm-3">
                                 <div className="callout callout-info">
                                     <strong className="text-muted">Search Term - Keyword Mapping Score</strong><br/>
-                                    <strong className="h4">8</strong>
-                                    <Progress className="progress-xs mt-2" color="success" value="80" />
+                                    <strong className="h4">{this.state.ad.searchScore}</strong>
+                                    <Progress className="progress-xs mt-2" color="success" value={this.state.ad.searchScore * 10} />
                                 </div>
                             </div>
                             <div className="col-sm-3">
                                 <div className="callout callout-info">
                                     <strong className="text-muted">Ad Relevancy Score</strong><br/>
-                                    <strong className="h4">6</strong>
+                                    <strong className="h4">{this.state.ad.adScore}</strong>
                                     <div className="chart-wrapper">
 
                                     </div>
-                                    <Progress className="progress-xs mt-2" color="warning" value="60" />
+                                    <Progress className="progress-xs mt-2" color="warning" value={this.state.ad.adScore * 10} />
                                 </div>
                             </div>
                             <div className="col-sm-3">
                                 <div className="callout callout-info">
                                     <strong className="text-muted">Landing Page Score</strong><br/>
-                                    <strong className="h4">3</strong>
+                                    <strong className="h4">{this.state.ad.lpScore}</strong>
                                     <div className="chart-wrapper">
 
                                     </div>
-                                    <Progress className="progress-xs mt-2" color="danger" value="30" />
+                                    <Progress className="progress-xs mt-2" color="danger" value={this.state.ad.lpScore * 10} />
                                 </div>
                             </div>
                             <div className="col-sm-3">
                                 <div className="callout callout-info">
                                     <strong className="text-muted">Overall Score</strong><br/>
-                                    <strong className="h4">7</strong>
+                                    <strong className="h4">{this.state.ad.overallScore}</strong>
                                     <div className="chart-wrapper">
 
                                     </div>
-                                    <Progress className="progress-xs mt-2" color="warning" value="70" />
+                                    <Progress className="progress-xs mt-2" color="warning" value={this.state.ad.overallScore * 10} />
                                 </div>
                             </div>
                         </div>
@@ -448,6 +549,13 @@ class Ad extends Component {
                                 <i className="fa fa-clone fa-lg mt-2"></i> Other Ads of this Ad group
                             </NavLink>
                         </NavItem>
+                        <NavItem>
+                            <NavLink
+                                className={classnames({ active: this.state.activeTab === '5' })}
+                                onClick={() => { this.toggle('5'); }} >
+                                <i className="fa fa-cogs fa-lg mt-2"></i> Ad Settings
+                            </NavLink>
+                        </NavItem>
                     </Nav>
                     <TabContent activeTab={this.state.activeTab}>
                         <TabPane tabId="1">
@@ -466,7 +574,7 @@ class Ad extends Component {
                         <span className="input-group-btn">
                           <button type="button" className="btn btn-primary"><i className="fa fa-group"></i> Ad Group</button>
                         </span>
-                                        <input type="text" id="input1-group2" name="input1-group2" value="USA:ENG:$:PT:AMER:USA:CA:Santa_Barbara:602277:Lavender_Inn_By_The_Sea:PE84820:E:NC:" className="form-control" disabled style={{backgroundColor: "white"}}/>
+                                        <input type="text" id="input1-group2" name="input1-group2" value={this.state.ad.adGroup} className="form-control" disabled style={{backgroundColor: "white"}}/>
                                     </div>
                                 </div>
                             </div>
@@ -476,7 +584,7 @@ class Ad extends Component {
                         <span className="input-group-btn">
                           <button type="button" className="btn btn-primary"><i className="fa fa-suitcase"></i> Campaign</button>
                         </span>
-                                        <input type="text" id="input1-group2" name="input1-group2" value="USA:ENG:$:PT:AMER:USA:E:NC::" className="form-control" disabled style={{backgroundColor: "white"}}/>
+                                        <input type="text" id="input1-group2" name="input1-group2" value={this.state.ad.campaign} className="form-control" disabled style={{backgroundColor: "white"}}/>
                                     </div>
                                 </div>
                                 <div className="col-md-4">
@@ -493,32 +601,45 @@ class Ad extends Component {
 
                         </TabPane>
                         <TabPane tabId="2">
-                            <div className="card-block">
-                                <button type="button" className="btn btn-outline-primary active">bayfront inn santa cruz</button>
-                                <button type="button" className="btn btn-outline-secondary active">lux tea horse road benzilan</button>
-                                <button type="button" className="btn btn-outline-success active">tahiti village hotel las vegas</button>
-                                <button type="button" className="btn btn-outline-info active">del valle lodge</button>
-                                <button type="button" className="btn btn-outline-warning active">center bridge inn</button>
-                                <button type="button" className="btn btn-outline-danger active">divi phoenix aruba</button>
-                                <button type="button" className="btn btn-outline-warning active">center bridge inn</button>
-                                <button type="button" className="btn btn-outline-danger active">indian springs calistoga ca</button>
+                            <div className="card-block" id="google">
+                            <ButtonArray  searchquery={this.state.allSearchQueries}/>
                             </div>
                         </TabPane>
                         <TabPane tabId="3">
                             <div className="card-block">
-                                <button type="button" className="btn btn-outline-primary active">+hotel +10 +montreal</button>
-                                <button type="button" className="btn btn-outline-secondary active">[bayfront inn santa cruz]</button>
-                                <button type="button" className="btn btn-outline-success active"> +seagate +hotel</button>
-                                <button type="button" className="btn btn-outline-info active">[ofelias hotel barcelona]</button>
-                                <button type="button" className="btn btn-outline-warning active"> +beach +tower +okinawa</button>
-                                <button type="button" className="btn btn-outline-danger active">[grand hotel ocean city md]</button>
+                                <ButtonArray searchquery={this.state.keywords}/>
                             </div>
                         </TabPane>
                         <TabPane tabId="4">
                             <div className="card-block">
-                                <button type="button" className="btn btn-outline-info active" onClick={this.redirectToAdPage.bind(this)}>8237643245987345</button>
-                                <button type="button" className="btn btn-outline-warning active" onClick={this.redirectToAdPage.bind(this)}>2374234927364</button>
-                                <button type="button" className="btn btn-outline-danger active" onClick={this.redirectToAdPage.bind(this)}>435786234592345</button>
+                                {/*<button type="button" className="btn btn-outline-info active" onClick={this.redirectToAdPage.bind(this)}>8237643245987345</button>*/}
+                                {/*<button type="button" className="btn btn-outline-warning active" onClick={this.redirectToAdPage.bind(this)}>2374234927364</button>*/}
+                                {/*<button type="button" className="btn btn-outline-danger active" onClick={this.redirectToAdPage.bind(this)}>435786234592345</button>*/}
+                                <ButtonArray searchquery={this.state.otherAds}/>
+                            </div>
+                        </TabPane>
+                        <TabPane tabId="5">
+                            <div className="card-block">
+                                <span>Ad State: &nbsp;</span>
+                                <label className="switch switch-3d switch-primary">
+                                    <input type="checkbox" className="switch-input" defaultChecked onChange={this.handleCheckBoxChange}/>
+                                    <span className="switch-label"></span>
+                                    <span className="switch-handle"></span>
+                                </label>
+                                <span style={{marginLeft:30}}>Replace current Landing page with suggested Landing page: &nbsp;</span>
+                                <label className="switch switch-3d switch-primary">
+                                    <input type="checkbox" className="switch-input"  onChange={this.handleCheckBoxChange}/>
+                                    <span className="switch-label"></span>
+                                    <span className="switch-handle"></span>
+                                </label>
+                                <span style={{marginLeft:30}}>Replace current Ad with suggested Ad: &nbsp;</span>
+                                <label className="switch switch-3d switch-primary">
+                                    <input type="checkbox" className="switch-input"  onChange={this.handleCheckBoxChange}/>
+                                    <span className="switch-label"></span>
+                                    <span className="switch-handle"></span>
+                                </label>
+                                <Button color="success" style={{ float:"right"}}>Save Ad Settings</Button>
+
                             </div>
                         </TabPane>
                     </TabContent>
@@ -528,16 +649,21 @@ class Ad extends Component {
 
                 <div className="row" style={{marginTop : 5}}>
                     <div className="col-sm-6">
-                        <div className="card">
-                            <div className="card-header" style={{textAlign : "centre"}}>CURRENT AD</div>
-                            <div className="card-block"> <Google_Advert data={this.state.ad}/></div>
+                        <div className="card card-accent-danger">
+                            <div className="card-header" style={{textAlign : "centre"}} >CURRENT AD
+                                {/*<Button color="success" onClick={this.togglePrimary} style={{ float:"right", marginTop: 2}}>Edit</Button>*/}
+                            </div>
+
+                            <div className="card-block"> <Google_Advert data={this.state.currentAd}/></div>
                         </div>
                     </div>
 
                     <div className="col-sm-6">
-                        <div className="card">
-                            <div className="card-header">NEW AD SUGGESTION</div>
-                            <div className="card-block"> <Google_Advert data={this.state.ad}/></div>
+                        <div className="card card-accent-info">
+                            {/*style={{height: 60}}*/}
+                            <div className="card-header" >NEW AD SUGGESTION
+                            </div>
+                            <div className="card-block"> <Google_Advert2 data={this.state.newAd}/></div>
                         </div>
                     </div>
                 </div>
@@ -545,18 +671,6 @@ class Ad extends Component {
 
 
 
-              {/*<div className="row">*/}
-                  {/*<div className="col-md-6">*/}
-                  {/*<div className="card">*/}
-                      {/*<Google_Advert data={this.state.ad}/>*/}
-                  {/*</div>*/}
-                      {/*<div className="col-md-12" style={{float:"right"}}>*/}
-
-                              {/*<Google_Advert data={this.state.ad}/>*/}
-
-                      {/*</div>*/}
-              {/*</div>*/}
-              {/*</div>*/}
 
             </div>
                         </div>
@@ -567,6 +681,35 @@ class Ad extends Component {
         )
     }
 }
+
+class ButtonArray extends Component {
+    render() {
+        let classes = ["btn-outline-primary active", "btn-outline-secondary active", "btn-outline-success active", "btn-outline-info active", "btn-outline-warning active", "btn-outline-danger",
+            "btn-outline-primary active", "btn-outline-secondary active", "btn-outline-success active", "btn-outline-info active", "btn-outline-warning active", "btn-outline-danger",
+            "btn-outline-primary active", "btn-outline-secondary active", "btn-outline-success active", "btn-outline-info active", "btn-outline-warning active", "btn-outline-danger",
+            "btn-outline-primary active", "btn-outline-secondary active", "btn-outline-success active", "btn-outline-info active", "btn-outline-warning active", "btn-outline-danger",
+            "btn-outline-primary active", "btn-outline-secondary active", "btn-outline-success active", "btn-outline-info active", "btn-outline-warning active", "btn-outline-danger",
+            "btn-outline-primary active", "btn-outline-secondary active", "btn-outline-success active", "btn-outline-info active", "btn-outline-warning active", "btn-outline-danger"]
+
+
+
+
+        let div_ele = [];
+        for(var i=0;i<this.props.searchquery.length;i++){
+
+            let classNae = "btn " + classes[i];
+
+            var ele = <button type="button" className={classNae}>{this.props.searchquery[i]}</button>;
+
+            div_ele.push(ele);
+
+
+        }
+        return <div>{div_ele}</div>;
+    }
+}
+
+
 
 
 

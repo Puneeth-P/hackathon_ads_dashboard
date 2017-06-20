@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import logo from '../../ad.png'
-import ContentEditable from "react-contenteditable";
 
 
 
 
-let arr;// ->Change this to get data from axios;
 
-let isEdit;
-export default class Google_Advert extends Component {
+let arr// ->Change this to get data from axios;
+
+
+export default class Google_Advert2 extends Component {
 
     constructor(props) {
         super(props);
@@ -18,7 +18,7 @@ export default class Google_Advert extends Component {
         };
 
         arr = this.props.data;
-        isEdit = this.props.isEdit;
+
 
     }
 
@@ -43,9 +43,10 @@ class Advert extends Component {
 
 
 
+
         return (
-            <div className="Advert" contentEditable>
-                <Heading value = {arr.heading_1 + " - " + arr.heading_2} name ={arr.url}/>
+            <div className="Advert" >
+                <Heading value = {arr.heading_1 + " - " + arr.heading_1} name ={arr.url}/>
                 <Landing_pg value = {arr.landing_page}/>
                 <Description value = {arr.description}/>
             </div>

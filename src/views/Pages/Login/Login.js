@@ -19,16 +19,20 @@ class Login extends Component {
         super(props);
         this.state = {
             startDate: moment(),
-            checked: true
+            checked: true,
+            date:'13-06-2017'
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
+        this.redirectToDashboard = this.redirectToDashboard.bind(this);
     }
 
     handleChange(date) {
         this.setState({
-            startDate: date
+            startDate: date,
+            date: date
         });
+
     }
 
     handleCheckBoxChange() {
@@ -37,8 +41,8 @@ class Login extends Component {
         });
     }
 
-    static redirectToDashboard () {
-        window.location.href = '/campaign?account=G:USA:ENG:$:PT:X';
+    redirectToDashboard () {
+        window.location.href = '/campaign?account=G:USA:ENG:$:PT:X&date=' +this.state.date;
     }
 
   render() {
@@ -71,8 +75,8 @@ class Login extends Component {
                             <h1>Login</h1>
                             <p className="text-muted">Select the Account and Date to view the Dashboard</p>
 
-                              <div class="form-group col-sm-4"><label>Account &nbsp;</label>
-                                  <select class="form-control" id="ccyear">
+                              <div className="form-group col-sm-4"><label>Account &nbsp;</label>
+                                  <select className="form-control" id="ccyear">
                                       <option>G:USA:ENG:$:PT:X:</option>
                                       <option>G:UK:ENG:$:PT:X:</option>
                                   </select></div>
@@ -89,7 +93,7 @@ class Login extends Component {
 
                             <div className="row">
                               <div className="col-6">
-                                <button type="button" className="btn btn-primary px-4" onClick={Login.redirectToDashboard}>Login</button>
+                                <button type="button" className="btn btn-primary px-4" onClick={this.redirectToDashboard}>Login</button>
                               </div>
                             </div>
                           </div>

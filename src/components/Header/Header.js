@@ -42,7 +42,7 @@ class Header extends Component {
     return (
       <header className="app-header navbar">
         <a className="navbar-brand" href="#"></a>
-        <h6 className="expediaHeading">EXPEDIA AD SENSE </h6>
+        <h6 className="expediaHeading">EXPEDIA AD VALIDATOR AND PERFORMANCE AMPLIFIER</h6>
        <div></div>
       </header>
     )

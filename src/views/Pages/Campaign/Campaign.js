@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import {Progress } from 'reactstrap';
-import { withRouter } from 'react-router'
+
 import Breadcrumb from '../../../components/Breadcrumb/';
 import Header from '../../../components/Header';
+import axios from 'axios';
 
 
 const brandPrimary =  '#20a8d8';
@@ -11,204 +12,7 @@ const brandSuccess =  '#4dbd74';
 const brandInfo =     '#63c2de';
 const brandDanger =   '#f86c6b';
 
-// Card Chart 1
-const cardChartData1 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'Impressions ',
-            backgroundColor: brandPrimary,
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [65, 59, 84, 84, 51, 55, 40]
-        }
-    ],
-};
-
-const cardChartOpts1 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            gridLines: {
-                color: 'transparent',
-                zeroLineColor: 'transparent'
-            },
-            ticks: {
-                fontSize: 2,
-                fontColor: 'transparent',
-            }
-
-        }],
-        yAxes: [{
-            display: false,
-            ticks: {
-                display: false,
-                min: Math.min.apply(Math, cardChartData1.datasets[0].data) - 5,
-                max: Math.max.apply(Math, cardChartData1.datasets[0].data) + 5,
-            }
-        }],
-    },
-    elements: {
-        line: {
-            borderWidth: 1
-        },
-        point: {
-            radius: 4,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 2
-const cardChartData2 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: brandInfo,
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [1, 18, 9, 17, 34, 22, 11]
-        }
-    ],
-};
-
-const cardChartOpts2 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            gridLines: {
-                color: 'transparent',
-                zeroLineColor: 'transparent'
-            },
-            ticks: {
-                fontSize: 2,
-                fontColor: 'transparent',
-            }
-
-        }],
-        yAxes: [{
-            display: false,
-            ticks: {
-                display: false,
-                min: Math.min.apply(Math, cardChartData2.datasets[0].data) - 5,
-                max: Math.max.apply(Math, cardChartData2.datasets[0].data) + 5,
-            }
-        }],
-    },
-    elements: {
-        line: {
-            tension: 0.00001,
-            borderWidth: 1
-        },
-        point: {
-            radius: 4,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 3
-const cardChartData3 = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(255,255,255,.2)',
-            borderColor: 'rgba(255,255,255,.55)',
-            data: [78, 81, 80, 45, 34, 12, 40]
-        }
-    ],
-};
-
-const cardChartOpts3 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            display: false
-        }],
-        yAxes: [{
-            display: false
-        }],
-    },
-    elements: {
-        line: {
-            borderWidth: 2
-        },
-        point: {
-            radius: 0,
-            hitRadius: 10,
-            hoverRadius: 4,
-        },
-    }
-}
-
-// Card Chart 4
-const cardChartData4 = {
-    labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(255,255,255,.3)',
-            borderColor: 'transparent',
-            data: [78, 81, 80, 45, 34, 12, 40, 75, 34, 89, 32, 68, 54, 72, 18, 98]
-        }
-    ],
-};
-
-const cardChartOpts4 = {
-    maintainAspectRatio: false,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [{
-            display: false,
-            barPercentage: 0.6,
-        }],
-        yAxes: [{
-            display: false,
-        }]
-    }
-};
-
-const rows = [
-    ['a1', 'b1', 'c1'],
-    ['a2', 'b2', 'c2'],
-    ['a3', 'b3', 'c3'],
-    // .... and more
-];
-
-
-// Main Chart
-
-
-
-//Random Numbers
-function random(min,max) {
-    return Math.floor(Math.random()*(max-min+1)+min);
-}
-
-var elements = 27;
-var data1 = [];
-var data2 = [];
-var data3 = [];
-
-for (var i = 0; i <= elements; i++) {
-    data1.push(random(50,200));
-    data2.push(random(80,100));
-    data3.push(65);
-}
-
+let date;
 
 
 class Campaign extends Component {
@@ -226,63 +30,37 @@ class Campaign extends Component {
             products : [],
             currentPage: 1,
             adsPerPage: 10,
-            account: ""
+            account: "",
+            allAdsData: {},
+            impressions: [],
+            clicks: [],
+            ctr: [],
+            cost: []
         };
-        this.state.products = [
-            {
-                id : "1",
-               campaign: "USA:ENG:$:PT:GLOB:X:F:EC::US-International:",
-                score: "5",
-            },
-            {
-                id : "2",
-                campaign: "USA:ENG:$:GT:GLOB:ALL:E:NC::",
-                score: "7",
-            },
-
-            {
-                id : "3",
-                campaign: "USA:ENG:$:PT:AMER:USA:F:EC:2-US-MW-NE:",
-                score: "9",
-            },
-
-            {
-                id : "4",
-                campaign: "USA:ENG:$:PT:GLOB:ALL:D:EC:Restricted:",
-                score: "3",
-            },
-            {
-                id : "5",
-                campaign: "USA:ENG:$:GT:GLOB:ALL:E:NC::",
-                score: "6",
-            }
-
-        ]
-
-
-
     }
 
     componentDidMount() {
-    let _this = this;
-    this.serverRequest =
+        let _this = this;
+        this.serverRequest =
         axios
-            .get("http://codepen.io/jobs.json")
+            .get("http://127.0.0.1:3005/get")
             .then(function(result) {
+                console.log(result);
                 _this.setState({
-                    jobs: result.data.jobs
+                    products: result.data.campaignInfo,
+                    allAdsData: result.data.allAdsData,
+                    impressions: result.data.allAdsData.impressions,
+                    clicks: result.data.allAdsData.clicks,
+                    ctr: result.data.allAdsData.ctr,
+                    cost: result.data.allAdsData.cost
                 });
             })
+
 }
 
     componentWillUnmount() {
     this.serverRequest.abort();
 }
-
-
-
-
-
 
     handleUserInput(filterText) {
         this.setState(
@@ -312,7 +90,190 @@ class Campaign extends Component {
 
     }
 
+
+
     render() {
+
+        // Card Chart 1
+        const cardChartData1 = {
+            labels: ['Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13'],
+            datasets: [
+                {
+                    label: 'Impressions ',
+                    backgroundColor: brandPrimary,
+                    borderColor: 'rgba(255,255,255,.55)',
+                    data: this.state.impressions
+                }
+            ],
+        };
+
+        const cardChartOpts1 = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'transparent',
+                        zeroLineColor: 'transparent'
+                    },
+                    ticks: {
+                        fontSize: 2,
+                        fontColor: 'transparent',
+                    }
+
+                }],
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        display: false,
+                        min: Math.min.apply(Math, cardChartData1.datasets[0].data) - 5,
+                        max: Math.max.apply(Math, cardChartData1.datasets[0].data) + 5,
+                    }
+                }],
+            },
+            elements: {
+                line: {
+                    borderWidth: 1
+                },
+                point: {
+                    radius: 4,
+                    hitRadius: 10,
+                    hoverRadius: 4,
+                },
+            }
+        };
+
+        // Card Chart 2
+        const cardChartData2 = {
+            labels: ['Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13'],
+            datasets: [
+                {
+                    label: 'Clicks',
+                    backgroundColor: brandInfo,
+                    borderColor: 'rgba(255,255,255,.55)',
+                    data: this.state.clicks
+                }
+            ],
+        };
+
+        const cardChartOpts2 = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'transparent',
+                        zeroLineColor: 'transparent'
+                    },
+                    ticks: {
+                        fontSize: 2,
+                        fontColor: 'transparent',
+                    }
+
+                }],
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        display: false,
+                        min: Math.min.apply(Math, cardChartData2.datasets[0].data) - 5,
+                        max: Math.max.apply(Math, cardChartData2.datasets[0].data) + 5,
+                    }
+                }],
+            },
+            elements: {
+                line: {
+                    tension: 0.00001,
+                    borderWidth: 1
+                },
+                point: {
+                    radius: 4,
+                    hitRadius: 10,
+                    hoverRadius: 4,
+                },
+            }
+        };
+
+
+        // Card Chart 3
+        const cardChartData3 = {
+            labels: ['Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13'],
+            datasets: [
+                {
+                    label: 'CTR',
+                    backgroundColor: 'rgba(255,255,255,.2)',
+                    borderColor: 'rgba(255,255,255,.55)',
+                    data: this.state.allAdsData.ctr
+
+                }
+            ],
+        };
+
+        const cardChartOpts3 = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    display: false
+                }],
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        display: false,
+                    }
+                }],
+            },
+            elements: {
+                line: {
+                    borderWidth: 2
+                },
+                point: {
+                    radius: 4,
+                    hitRadius: 10,
+                    hoverRadius: 4,
+                },
+            }
+        };
+
+        // Card Chart 4
+        const cardChartData4 = {
+            labels: ['Jun 9', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13'],
+            datasets: [
+                {
+                    label: 'Cost',
+                    backgroundColor: 'rgba(255,255,255,.3)',
+                    borderColor: 'transparent',
+                    data: this.state.cost
+                }
+            ],
+        };
+
+        const cardChartOpts4 = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    display: false,
+                    barPercentage: 0.6,
+                }],
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        display: false,
+                        min: Math.min.apply(Math, cardChartData4.datasets[0].data) - 0.5,
+                        max: Math.max.apply(Math, cardChartData4.datasets[0].data) + 1.5,
+                    }
+                }]
+            }
+        };
+
 
 
         const ads = this.state.products;
@@ -344,7 +305,10 @@ class Campaign extends Component {
             );
         });
         const params = new URLSearchParams(this.props.location.search);
-        this.state.account = params.get('account');
+        date = params.get('date');
+        this.state.account = params.get('account')
+
+
 
         return (
             <div className="app">
@@ -355,7 +319,7 @@ class Campaign extends Component {
                         <Breadcrumb />
                         <div className="container-fluid">
             <div className="animated fadeIn">
-                <h6 style={{textAlign :"center"}}>METRICS FOR THE ACCOUNT :{this.state.account}</h6>
+                <h6 style={{textAlign: 'center', fontWeight: 'normal'}}>METRICS FOR THE ACCOUNT <strong>{this.state.account}</strong> ON <strong>{date}</strong></h6>
                 <br/>
 
                 <div className="row">
@@ -364,8 +328,8 @@ class Campaign extends Component {
                         <div className="card card-inverse card-primary">
                             <div className="card-block pb-0">
 
-                                <h4 className="mb-0">3,524,224</h4>
-                                <p>Total Impressions of all ads yesterday</p>
+                                <h4 className="mb-0">{this.state.impressions[4]}</h4>
+                                <p>Total Impressions of all ads</p>
                             </div>
                             <div className="chart-wrapper px-3">
                                 <Line data={cardChartData1} options={cardChartOpts1} height={130}/>
@@ -376,8 +340,8 @@ class Campaign extends Component {
                     <div className="col-sm-6 col-lg-3">
                         <div className="card card-inverse card-info">
                             <div className="card-block pb-0">
-                                <h4 className="mb-0">203,476</h4>
-                                <p>Total Clicks on all ads yesterday</p>
+                                <h4 className="mb-0">{this.state.clicks[4]}</h4>
+                                <p>Total Clicks on all ads</p>
                             </div>
                             <div className="chart-wrapper px-3">
                                 <Line data={cardChartData2} options={cardChartOpts2} height={130}/>
@@ -388,8 +352,8 @@ class Campaign extends Component {
                     <div className="col-sm-6 col-lg-3">
                         <div className="card card-inverse card-warning">
                             <div className="card-block pb-0">
-                                <h4 className="mb-0">5.77%</h4>
-                                <p>Average CTR of all ads yesterday</p>
+                                <h4 className="mb-0">{this.state.ctr[4]}%</h4>
+                                <p>Average CTR of all ads</p>
                             </div>
                             <div className="chart-wrapper">
                                 <Line data={cardChartData3} options={cardChartOpts3} height={130}/>
@@ -400,8 +364,8 @@ class Campaign extends Component {
                     <div className="col-sm-6 col-lg-3">
                         <div className="card card-inverse card-danger">
                             <div className="card-block pb-0">
-                                <h4 className="mb-0">$469,534.88</h4>
-                                <p>Total cost of all ads yesterday</p>
+                                <h4 className="mb-0">${this.state.cost[4]}</h4>
+                                <p>Total cost of all ads</p>
                             </div>
                             <div className="chart-wrapper px-3">
                                 <Bar data={cardChartData4} options={cardChartOpts4} height={130}/>
@@ -415,24 +379,21 @@ class Campaign extends Component {
                     <div className="card-footer">
                         <ul>
                             <li>
-                                <div className="text-muted">Total Google Search Queries triggered yesterday</div>
-                                <strong>382,699</strong>
+                                <div className="text-muted">Total Google Search Queries triggered</div>
+                                <strong>{this.state.allAdsData.searchQueries}</strong>
                             </li>
-                            <li className="hidden-sm-down">
-                                <div className="text-muted">Total Unique Keywords triggered yesterday</div>
-                                <strong>127,566</strong>
-                            </li>
+
                             <li>
-                                <div className="text-muted">Average Position of all ads yesterday</div>
-                                <strong>2.4</strong>
+                                <div className="text-muted">Average Position of all ads</div>
+                                <strong>{this.state.allAdsData.position}</strong>
                             </li>
                             <li className="hidden-sm-down">
                                 <div className="text-muted">Average Cost per Click (CPC) yesterday</div>
-                                <strong>$2.31</strong>
+                                <strong>${this.state.allAdsData.cpc}</strong>
                             </li>
                             <li className="hidden-sm-down">
                                 <div className="text-muted">Average Cost per Thousand Impressions (CPM) yesterday</div>
-                                <strong>$133.23</strong>
+                                <strong>${this.state.allAdsData.cpm}</strong>
                             </li>
                         </ul>
                     </div>
@@ -444,7 +405,7 @@ class Campaign extends Component {
                         <div className="card">
 
                             <div className="card-block">
-                                <h6 style={{textAlign: 'center', fontWeight: 'normal'}}>ALL CAMPAIGNS FOR THE ACCOUNT <strong><i>{this.state.account} </i></strong>THAT TRIGGERED YESTERDAY</h6>
+                                <h6 style={{textAlign: 'center', fontWeight: 'normal'}}>ALL CAMPAIGNS FOR THE ACCOUNT <strong>{this.state.account}</strong> THAT TRIGGERED ON <strong>{date}</strong></h6>
 
 
                                 <div className="form-group row">
@@ -591,9 +552,8 @@ class ProductTable extends Component {
                 <table className="table table-hover table-outline mb-0 table-bordered">
                     <thead className="thead-default">
                     <tr>
-                        <th className="text-center" onClick={this.sortColumn.bind(this, 0)}>Sl No</th>
-                        <th className="text-center" onClick={this.sortColumn.bind(this, 1)}>Campaign Name</th>
-                        <th className="text-center" ref="score" onClick={this.sortColumn.bind(this, 2)}>Overall Score</th>
+                        <th className="text-center" onClick={this.sortColumn.bind(this, 0)}>Campaign Name</th>
+                        <th className="text-center" ref="score" onClick={this.sortColumn.bind(this, 1)}>Overall Score</th>
 
                     </tr>
                     </thead>
@@ -622,7 +582,7 @@ class ProductRow extends Component {
 
 
 
-        window.location.href = "/campaign/ad-group?campaign=" +campaign;
+        window.location.href = "/campaign/ad-group?campaign="+campaign+"&date="+date
     }
 
     render() {
@@ -630,19 +590,14 @@ class ProductRow extends Component {
         return (
             <tr onClick={this.redirectToAdGroupPage.bind(this, this.props.product.campaign)}>
                 <Cell cellData={{
-                    "type": "id",
-                    value: this.props.product.id,
-                    id: this.props.product.id
-                }}/>
-                <Cell cellData={{
                     "type": "campaign",
                     value: this.props.product.campaign,
-                    id: this.props.product.id
+                    id: this.props.product.campaign
                 }}/>
                 <Cell cellData={{
                     type: "score",
                     value: this.props.product.score,
-                    id: this.props.product.adId
+                    id: this.props.product.campaign
                 }}/>
             </tr>
         );
